@@ -83,7 +83,7 @@ class CustomerFollowUp(models.Model):
 
 class Branch(models.Model):
     # 储存校区信息
-    name = models.CharField(max_length=128, unique=True)
+    name = models.CharField(max_length=64, unique=True)
 
     def __str__(self):
         return self.name
@@ -182,13 +182,13 @@ class StudyRecord(models.Model):
                      (-100, 'COPY'),
                      (0, 'N/A'),
                      )
-    score = models.SmallIntegerField(choices=score_choices)
+    score = models.SmallIntegerField(u'本节成绩', choices=score_choices)
     attendance = models.SmallIntegerField(choices=attendance_choices, default=0)
     date = models.DateField(auto_now_add=True)
     memo = models.TextField(blank=True, null=True)
 
-    student = models.ForeignKey('Enrollment')
-    course_record = models.ForeignKey('CourseRecord')
+    student = models.ForeignKey('Customer', verbose_name=u'学员')
+    course_record = models.ForeignKey('CourseRecord', verbose_name=u'学习记录')
 
     def __str__(self):
         return '%s - %s - %s' % (self.student, self.course_record, self.score)
@@ -283,36 +283,86 @@ class Enrollment(models.Model):     # 报名表
         verbose_name_plural = '报名表'
 
 
-class Payment(models.Model):     # 缴费记录
-    amount = models.PositiveIntegerField(default=500, verbose_name='数额')
-    consultant = models.ForeignKey('UserProfile')
-    date = models.DateTimeField(auto_now_add=True)
-    customer = models.ForeignKey('Customer')
-    course = models.ForeignKey('Course', verbose_name='所报课程')
+class PaymentRecord(models.Model):
+    # 储存缴费记录
+    pay_type_choices = (('deposit', u"订金/报名费"),
+                        ('tuition', u"学费"),
+                        ('refund', u"退款"),
+                        )
+    pay_type = models.CharField(u'费用类型', choices=pay_type_choices, max_length=64, default="deposit")
+    amount = models.PositiveIntegerField(default=500, verbose_name='金额')
+    date = models.DateTimeField(u'交款日期', auto_now_add=True)
+    note = models.TextField("备注", blank=True, null=True)
+
+    consultant = models.ForeignKey('UserProfile', verbose_name=u'课程顾问')
+    enrollment = models.ForeignKey("Enrollment", verbose_name=u'报名信息')
 
     def __str__(self):
-        return '%s %s' % (self.customer, self.amount)
+        return '%s - 类型:%s - 金额:%s' % (self.enrollment.customer, self.pay_type, self.amount)
 
     class Meta:
-        verbose_name_plural = '缴费表'
+        verbose_name = '缴费纪录'
+        verbose_name_plural = "缴费纪录"
 
 
 class Role(models.Model):
+    # 储存角色信息
     name = models.CharField(max_length=32, unique=True)
-    menus = models.ManyToManyField('Menu', blank=True)
+    menus = models.ManyToManyField('FirstLayerMenu', blank=True)
 
     def __str__(self):
         return self.name
 
     class Meta:
-        verbose_name_plural = '角色表'
+        verbose_name = "角色"
+        verbose_name_plural = "角色"
 
 
-class Menu(models.Model):
-    name = models.CharField(max_length=32)
-    url_name = models.CharField(max_length=64)
-    url_type_choices = ((0, 'alias'), (1, 'absolute_url'))
+class FirstLayerMenu(models.Model):
+    # 储存第一层侧边栏菜单
+    name = models.CharField(u'一级菜单名', max_length=64)
+    url_type_choices = ((0, 'related_name'), (1, 'absolute_url'))
     url_type = models.SmallIntegerField(choices=url_type_choices, default=0)
+    url_name = models.CharField(max_length=64, unique=True)
+    order = models.SmallIntegerField(default=0, verbose_name='菜单排序')
+
+    sub_menus = models.ManyToManyField('SubMenu', blank=True)
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "第一层菜单"
+        verbose_name_plural = "第一层菜单"
+
+
+class SubMenu(models.Model):
+    # 储存第二层侧边栏菜单
+    name = models.CharField(u'二级菜单名', max_length=64)
+    url_type_choices = ((0, 'related_name'), (1, 'absolute_url'))
+    url_type = models.SmallIntegerField(choices=url_type_choices, default=0)
+    url_name = models.CharField(max_length=64, unique=True)
+    order = models.SmallIntegerField(default=0, verbose_name='菜单排序')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        verbose_name = "第二层菜单"
+        verbose_name_plural = "第二层菜单"
+
+
+class StuAccount(models.Model):
+    # 存储学员账户信息
+    password = models.CharField(max_length=128)
+    valid_start = models.DateTimeField("账户有效期开始", blank=True, null=True)
+    valid_end = models.DateTimeField("账户有效期截止", blank=True, null=True)
+
+    account = models.OneToOneField("Customer")
+
+    def __str__(self):
+        return self.account.customer.name
+
+    class Meta:
+        verbose_name = "学员账户"
+        verbose_name_plural = "学员账户"
