@@ -127,4 +127,4 @@ STATICFILES_DIRS = (
 
 AUTH_USER_MODEL = 'swing.UserProfile'
 
-LOGIN_URL = "/login/"
+LOGIN_URL = "/login"

@@ -2,6 +2,10 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 
 
+def entry(request):
+    return render(request, 'entry.html')
+
+
 def acc_login(request):
     error = {}
     if request.method == 'POST':
