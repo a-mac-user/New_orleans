@@ -33,37 +33,32 @@ class Customer(models.Model):
                               default=qq)
     status_choices = ((0, '已报名'),
                       (1, '未报名'),)
-    status = models.PositiveSmallIntegerField(choices=status_choices, default=1)
-    referral_from = models.CharField(verbose_name='转介绍人qq', max_length=64, null=True, blank=True)
-    content = models.TextField(verbose_name='咨询详情')
+    status = models.PositiveSmallIntegerField(u'状态', choices=status_choices, default=1)
+    referral_from = models.ForeignKey('self',
+                                      verbose_name=u"转介绍自学员",
+                                      help_text=u"若此客户是转介绍自内部学员,请在此处选学员姓名",
+                                      blank=True,
+                                      null=True,
+                                      related_name="internal_referral")
+    content = models.TextField(verbose_name='咨询详情', blank=True, null=True)
     date = models.DateTimeField(auto_now_add=True)
-    memo = models.TextField(blank=True, null=True)
+    memo = models.TextField(u'备注', blank=True, null=True)
 
-    consultant = models.ForeignKey('UserProfile')
-    consult_course = models.ForeignKey('Course', verbose_name='咨询课程')
-    tags = models.ManyToManyField('Tag')
-
-    def __str__(self):
-        return self.qq
-
-    class Meta:
-        verbose_name = '客户表'
-
-
-class Tag(models.Model):
-    name = models.CharField(unique=True, max_length=32)
+    consultant = models.ForeignKey('UserProfile', verbose_name=u'咨询顾问')
+    consult_course = models.ForeignKey('Course', verbose_name=u'咨询课程')
 
     def __str__(self):
-        return self.name
+        return u"QQ:%s - 姓名:%s" % (self.qq, self.name)
 
     class Meta:
-        verbose_name_plural = '标签表'
+        verbose_name = u'客户信息'
+        verbose_name_plural = u'客户信息'
 
 
 class CustomerFollowUp(models.Model):
-    content = models.TextField(verbose_name='跟进内容')
-    consultant = models.ForeignKey('UserProfile')
-    date = models.DateTimeField(auto_now_add=True)
+    # 储存客户后续跟进信息
+    content = models.TextField(u'跟进内容', blank=True, null=True)
+    date = models.DateTimeField(u'跟进日期', auto_now_add=True)
     intention_choices = ((0, '2周内报名'),
                          (1, '1个月内报名'),
                          (2, '近期无报名计划'),
@@ -71,19 +66,22 @@ class CustomerFollowUp(models.Model):
                          (4, '已报名'),
                          (5, '已拉黑'),
                          )
-    intention = models.SmallIntegerField(choices=intention_choices)
-    customer = models.ForeignKey('Customer')
+    intention = models.SmallIntegerField(u'意向', choices=intention_choices)
+
+    consultant = models.ForeignKey('UserProfile', verbose_name=u'跟踪顾问')
+    customer = models.ForeignKey('Customer', verbose_name=u'所咨询客户')
 
     def __str__(self):
-        return '<%s : %s>' % (self.customer.qq, self.intention)
+        return u'%s - %s' % (self.customer, self.intention)
 
     class Meta:
-        verbose_name_plural = '客户跟踪表'
+        verbose_name = u'客户跟进记录'
+        verbose_name_plural = u"客户跟进记录"
 
 
 class Branch(models.Model):
     # 储存校区信息
-    name = models.CharField(max_length=64, unique=True)
+    name = models.CharField(u'名称', max_length=64, unique=True)
 
     def __str__(self):
         return self.name
@@ -98,8 +96,8 @@ class Course(models.Model):
     name = models.CharField(u'课程名称', unique=True, max_length=64)
     price = models.PositiveSmallIntegerField('价格')
     period = models.PositiveSmallIntegerField('课程周期(月)')
-    outline = models.TextField('课程大纲')
-    description = models.TextField("课程描述")
+    outline = models.TextField('课程大纲', blank=True, null=True)
+    description = models.TextField("课程描述", blank=True, null=True)
 
     def __str__(self):
         return self.name
@@ -148,11 +146,11 @@ class CourseRecord(models.Model):
     has_homework = models.BooleanField(u'本节课程有作业', default=True)
     homework_title = models.CharField(u'作业标题', max_length=128, blank=True, null=True)
     homework_requirement = models.TextField(u'作业要求', blank=True, null=True)
-    outline = models.TextField(u'本节课程大纲')
+    outline = models.TextField(u'本节课程大纲', blank=True, null=True)
     date = models.DateField(u'上课日期', auto_now_add=True)
 
     from_class = models.ForeignKey('ClassList', verbose_name='班级')
-    teachers = models.ForeignKey('UserProfile')
+    teachers = models.ForeignKey('UserProfile', verbose_name=u'讲师')
 
     def __str__(self):
         return '%s - 第%s节' % (self.from_class, self.day_num)
@@ -165,11 +163,12 @@ class CourseRecord(models.Model):
 
 class StudyRecord(models.Model):
     # 储存学员的成绩和出勤状况
-    attendance_choices = ((0, '已签到'),
-                          (1, '迟到'),
-                          (2, '缺勤'),
-                          (3, '早退'),
+    attendance_choices = (('checked', u'已签到'),
+                          ('late', u'迟到'),
+                          ('absence', u'缺勤'),
+                          ('leave_early', u'早退'),
                           )
+    attendance = models.CharField(u'出勤情况', choices=attendance_choices, default=0, max_length=32)
     score_choices = ((100, 'A+'),
                      (90, 'A'),
                      (85, 'B+'),
@@ -183,24 +182,27 @@ class StudyRecord(models.Model):
                      (0, 'N/A'),
                      )
     score = models.SmallIntegerField(u'本节成绩', choices=score_choices)
-    attendance = models.SmallIntegerField(choices=attendance_choices, default=0)
-    date = models.DateField(auto_now_add=True)
-    memo = models.TextField(blank=True, null=True)
+    date = models.DateField(u'日期', auto_now_add=True)
+    memo = models.TextField(u'备注', blank=True, null=True)
 
     student = models.ForeignKey('Customer', verbose_name=u'学员')
     course_record = models.ForeignKey('CourseRecord', verbose_name=u'学习记录')
 
     def __str__(self):
-        return '%s - %s - %s' % (self.student, self.course_record, self.score)
+        return u'%s - 学员:%s - 成绩:%s' % (self.course_record, self.student, self.score)
 
     class Meta:
-        verbose_name_plural = '学习记录表'
+        verbose_name = u'学员学习纪录'
+        verbose_name_plural = u"学员学习纪录"
+        # 一个学员，在同一节课只可能出现一次
+        unique_together = ('course_record', 'student')
 
 
-class UserProfile(AbstractBaseUser, PermissionsMixin):    # 账号表(自定义用户认证)
+class UserProfile(AbstractBaseUser, PermissionsMixin):
+    # 储存账户信息(自定义用户认证)
     email = models.EmailField(
         verbose_name='email address',
-        max_length=64,
+        max_length=128,
         unique=True,
     )
     password = models.CharField(_('password'), max_length=128,
@@ -213,17 +215,14 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):    # 账号表(自定义�
         help_text='Designates whether the user can log into this admin site.',
     )
     name = models.CharField(max_length=32)
+    memo = models.TextField('备注', blank=True, null=True, default=None)
+    date_joined = models.DateTimeField(blank=True, null=True, auto_now_add=True)
+
     roles = models.ManyToManyField('Role', blank=True)
     branch = models.ForeignKey("Branch",
                                verbose_name="所属校区",
                                blank=True,
                                null=True)
-    memo = models.TextField('备注', blank=True, null=True, default=None)
-    date_joined = models.DateTimeField(blank=True, null=True, auto_now_add=True)
-    # stu_account = models.ForeignKey('Customer', verbose_name='关联学生账号',
-    #                                 blank=True,
-    #                                 null=True,
-    #                                 help_text='只有学员报名后可为其创建账户')
 
     objects = auth.UserProfileManager()
 
@@ -256,31 +255,37 @@ class UserProfile(AbstractBaseUser, PermissionsMixin):    # 账号表(自定义�
         verbose_name_plural = '账户'
 
         permissions = (
-            ('crm_customers', '可以访问 客户库'),
-            ('crm_table_list', '可以访问 kingadmin 每个表的数据列表页'),
-            ('crm_table_index', '可以访问 kingadmin 首页'),
-            ('crm_table_list_view', '可以访问 kingadmin 每个表中对象的修改页'),
-            ('crm_table_list_change', '可以修改 kingadmin 每个表中对象'),
-            ('crm_table_list_action', '可以操作 每个表的 action 功能'),
-            ('crm_can_access_my_clients', '可以访问 自己的 客户列表'),
+            ('customers', '可以访问 客户库'),
+            ('table_list', '可以访问 swing 每个表的数据列表页'),
+            ('table_index', '可以访问 swing 首页'),
+            ('table_list_view', '可以访问 swing 每个表中对象的修改页'),
+            ('table_list_change', '可以修改 swing 每个表中对象'),
+            ('table_list_action', '可以操作 每个表的 action 功能'),
+            ('can_access_my_clients', '可以访问 自己的 客户列表'),
         )
 
 
-class Enrollment(models.Model):     # 报名表
-    contract_agreed = models.BooleanField(default=False, verbose_name='学员已同意合同条款')
-    contract_approved = models.BooleanField(default=False, verbose_name='合同已审核')
-    date = models.DateTimeField(auto_now_add=True)
+class Enrollment(models.Model):
+    # 存储学员报名的信息
+    customer = models.ForeignKey('Customer', verbose_name=u'学员')
+    school = models.ForeignKey('Branch', verbose_name='校区')
+    # 选择班级，班级是关联课程的
+    course_class = models.ForeignKey("ClassList", verbose_name="所报班级")
 
-    enrolled_class = models.ForeignKey('ClassList', verbose_name='所报班级')
-    customer = models.ForeignKey('Customer')
-    consultant = models.ForeignKey('UserProfile', verbose_name='课程顾问')
+    contract_agreed = models.BooleanField("我已认真阅读完培训协议并同意全部协议内容")
+    contract_approved = models.BooleanField("审批通过", help_text=u"在审阅完学员的资料无误后勾选此项,合同即生效")
+    enrolled_date = models.DateTimeField(auto_now_add=True, auto_created=True,
+                                         verbose_name="报名日期")
+    memo = models.TextField('备注', blank=True, null=True)
 
     def __str__(self):
-        return '%s %s' % (self.customer, self.enrolled_class)
+        return "%s - 课程:%s" % (self.customer, self.course_class)
 
     class Meta:
-        unique_together = ('customer', 'enrolled_class')
-        verbose_name_plural = '报名表'
+        verbose_name = '学员报名表'
+        verbose_name_plural = "学员报名表"
+        unique_together = ("customer", "course_class")
+        # 客户 + 班级"的联合唯一是为了可以让一个客户可以报多个班级
 
 
 class PaymentRecord(models.Model):
@@ -307,8 +312,8 @@ class PaymentRecord(models.Model):
 
 class Role(models.Model):
     # 储存角色信息
-    name = models.CharField(max_length=32, unique=True)
-    menus = models.ManyToManyField('FirstLayerMenu', blank=True)
+    name = models.CharField(u'名称', max_length=32, unique=True)
+    menus = models.ManyToManyField('FirstLayerMenu', blank=True, verbose_name='菜单')
 
     def __str__(self):
         return self.name
@@ -322,11 +327,11 @@ class FirstLayerMenu(models.Model):
     # 储存第一层侧边栏菜单
     name = models.CharField(u'一级菜单名', max_length=64)
     url_type_choices = ((0, 'related_name'), (1, 'absolute_url'))
-    url_type = models.SmallIntegerField(choices=url_type_choices, default=0)
-    url_name = models.CharField(max_length=64, unique=True)
-    order = models.SmallIntegerField(default=0, verbose_name='菜单排序')
+    url_type = models.SmallIntegerField(u'URL类型', choices=url_type_choices, default=0)
+    url_name = models.CharField(u'URL名', max_length=64, unique=True)
+    order = models.SmallIntegerField(default=0, verbose_name='菜单排序', blank=True, null=True)
 
-    sub_menus = models.ManyToManyField('SubMenu', blank=True)
+    sub_menus = models.ManyToManyField('SubMenu', blank=True, verbose_name='子菜单')
 
     def __str__(self):
         return self.name
@@ -340,8 +345,8 @@ class SubMenu(models.Model):
     # 储存第二层侧边栏菜单
     name = models.CharField(u'二级菜单名', max_length=64)
     url_type_choices = ((0, 'related_name'), (1, 'absolute_url'))
-    url_type = models.SmallIntegerField(choices=url_type_choices, default=0)
-    url_name = models.CharField(max_length=64, unique=True)
+    url_type = models.SmallIntegerField(u'URL类型', choices=url_type_choices, default=0)
+    url_name = models.CharField(u'URL名', max_length=64, unique=True)
     order = models.SmallIntegerField(default=0, verbose_name='菜单排序')
 
     def __str__(self):
@@ -354,11 +359,11 @@ class SubMenu(models.Model):
 
 class StuAccount(models.Model):
     # 存储学员账户信息
-    password = models.CharField(max_length=128)
+    password = models.CharField(u'密码', max_length=128)
     valid_start = models.DateTimeField("账户有效期开始", blank=True, null=True)
     valid_end = models.DateTimeField("账户有效期截止", blank=True, null=True)
 
-    account = models.OneToOneField("Customer")
+    account = models.OneToOneField("Customer", verbose_name='客户')
 
     def __str__(self):
         return self.account.customer.name
