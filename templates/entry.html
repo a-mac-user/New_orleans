@@ -17,15 +17,14 @@
         <div class="container-fluid">
             <div class="row-fluid">
                 <div class="span2 offset5" style="margin-top: 200px">
-            <ul class="quick-actions">
-              <li class="bg_lb"> <a href="#"> <i class="icon-book"></i> 学员 </a> </li>
-              <li class="bg_lg"> <a href="#"> <i class="icon-tasks"></i> 销售</a> </li>
-              <li class="bg_ly"> <a href="#"> <i class="icon-bar-chart"></i> 讲师 </a> </li>
-              <li class="bg_lo"> <a href="#"> <i class="icon-user"></i> 管理</a> </li>
+                <ul class="quick-actions">
+                <li class="bg_lb"> <a href="{% url 'student' %}"> <i class="icon-book"></i> 学员 </a> </li>
+                <li class="bg_lg"> <a href="{% url 'sales' %}"> <i class="icon-tasks"></i> 销售</a> </li>
+                <li class="bg_ly"> <a href="{% url 'teacher' %}"> <i class="icon-bar-chart"></i> 讲师 </a> </li>
+                <li class="bg_lo"> <a href="{% url 'swing' %}"> <i class="icon-user"></i> 管理</a> </li>
             </ul>
           </div>
         </div>
-            </div>
+        </div>
     </body>
-
 </html>

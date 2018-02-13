@@ -1,7 +1,6 @@
 from sales import views
-from django.contrib import admin
 from django.conf.urls import url
 
 urlpatterns = [
-    # url(r'^teacher/', views.),
+    url(r'^$', views.sales_index, name='sales'),
 ]
