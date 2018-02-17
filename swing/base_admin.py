@@ -2,16 +2,13 @@ from swing import models
 from django.shortcuts import render, redirect, HttpResponse
 
 enable_admins = {}
-# 仿写admin.py，观察页面，推测，构造字典
-# {'crm' : {'UserProfile': admin_class,
-#           'customer': customer_admin}}
 
 
 class BaseAdmin(object):
     list_display = []
     list_filter = []
     search_fields = []
-    list_per_page = 5
+    list_per_page = 10
     ordering = None
     filter_horizontal = []
     actions = ['delete_selected_objs', ]
