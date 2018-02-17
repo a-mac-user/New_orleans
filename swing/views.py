@@ -1,3 +1,4 @@
+from fusion.base_admin import site
 from django.shortcuts import render, redirect, HttpResponseRedirect
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
@@ -12,12 +13,11 @@ def acc_login(request):
     if request.method == 'POST':
         email = request.POST.get('email')
         password = request.POST.get('password')
-        print(email,password)
         user = authenticate(username=email, password=password)
         if user:
             login(request, user)
             request.session.set_expiry(60*60)
-            return HttpResponseRedirect(request.GET.get('next') if request.GET.get('next') else '/')
+            return HttpResponseRedirect(request.GET.get('next') if request.GET.get('next') else '/entry')
         else:
             error["error"] = 'Wrong username or password!'
     return render(request, 'login.html', {'error': error})
@@ -30,4 +30,4 @@ def acc_logout(request):
 
 @login_required()
 def swing_index(request):
-    return render(request, 'swing/swing_index.html')
+    return render(request, 'swing/swing_index.html', {'enabled_admins': site.enabled_admins})
