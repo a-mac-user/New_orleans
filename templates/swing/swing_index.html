@@ -1,8 +1,8 @@
 {% extends 'base.html' %}
+{% load swing_tag %}
 {% block title %}Swing{% endblock %}
 
 {% block container %}
-
 {% for app_name,admin_class_dic in enabled_admins.items %}
 <div class="row">
     <div class="panel panel-info col-md-8 ">
