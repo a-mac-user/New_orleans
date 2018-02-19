@@ -34,7 +34,7 @@ def acc_logout(request):
 
 @login_required
 def swing_index(request):
-    print('sdasdsaf', site.enabled_admins)
+    print('开始返回', site.enabled_admins)
     return render(request, 'swing/swing_index.html', {'enabled_admins': site.enabled_admins})
 
 

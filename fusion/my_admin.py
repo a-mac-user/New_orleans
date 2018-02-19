@@ -128,6 +128,7 @@ class CourseAdmin(BaseAdmin):
     list_display = ('id', 'name', 'period')
 
 
+print('走了my_admin')
 site.register(models.Customer, CustomerAdmin)
 site.register(models.ClassList, ClasslistAdmin)
 site.register(models.Enrollment, EnrollmentAdmin)

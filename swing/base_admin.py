@@ -45,12 +45,12 @@ class AdminSite(object):
         self.enabled_admins = {}  # model_class class -> admin_class instance
 
     def register(self, model_class, admin_class=None):
-        if model_class._meta.app_label not in self.enable_admins:
-            self.enable_admins[model_class._meta.app_label] = {}
+        if model_class._meta.app_label not in self.enabled_admins:
+            self.enabled_admins[model_class._meta.app_label] = {}
         if not admin_class:  # no custom admin class , use BaseAdmin
             admin_class = BaseAdmin()
-        admin_class.model = model_class  # 绑定model 对象和admin 类
-        self.enable_admins[model_class._meta.app_label][model_class._meta.model_name] = admin_class
+        admin_class.model = model_class  # 绑定model对象和admin 类
+        self.enabled_admins[model_class._meta.app_label][model_class._meta.model_name] = admin_class
 
 
 site = AdminSite()
