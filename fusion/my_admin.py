@@ -1,6 +1,6 @@
 from swing import models
 from django import forms
-from fusion.base_admin import BaseAdmin, site
+from swing.base_admin import BaseAdmin, site
 
 
 class UserCreationForm(forms.ModelForm):

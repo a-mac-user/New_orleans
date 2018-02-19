@@ -1,7 +1,8 @@
 import re
 import json
-from swing import forms, tables
-from fusion.base_admin import site
+from swing import tables
+from fusion import forms
+from swing.base_admin import site
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
