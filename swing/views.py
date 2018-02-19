@@ -1,7 +1,6 @@
 import re
 import json
-from swing import tables
-from fusion import forms
+from swing import tables, forms
 from swing.base_admin import site
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth import login, logout, authenticate
@@ -35,6 +34,7 @@ def acc_logout(request):
 
 @login_required
 def swing_index(request):
+    print('sdasdsaf', site.enabled_admins)
     return render(request, 'swing/swing_index.html', {'enabled_admins': site.enabled_admins})
 
 
@@ -69,13 +69,13 @@ def batch_update(request, editable_data, admin_class):
     return True, []
 
 
-@login_required(login_url="/kingadmin/login/")
+@login_required(login_url="/swing/login")
 def display_table_list(request, app_name, table_name, embed=False):
     """
     :param request:
     :param app_name:
     :param table_name:
-    :param embed: 若此函数是被另一个view调用的，则embed=True,通常用在把kingadmin套件嵌入在其他项目时
+    :param embed: 若此函数是被另一个view调用的，则embed=True,嵌入时可开启
     :return:
     """
 
@@ -137,13 +137,13 @@ def display_table_list(request, app_name, table_name, embed=False):
             if embed:
                 return return_data
             else:
-                return render(request, 'kingadmin/model_obj_list.html', return_data)
+                return render(request, 'swing/model_obj_list.html', return_data)
 
     else:
         raise Http404("url %s/%s not found" % (app_name, table_name))
 
 
-@login_required(login_url="/kingadmin/login/")
+@login_required(login_url="/swing/login")
 def table_change(request, app_name, table_name, obj_id, embed=False):
     # print("table change:",app_name,table_name ,obj_id)
 
@@ -184,36 +184,36 @@ def table_change(request, app_name, table_name, obj_id, embed=False):
             if embed:
                 return return_data
             else:
-                return render(request, 'kingadmin/table_change.html', return_data)
+                return render(request, 'swing/table_change.html', return_data)
 
     else:
         raise Http404("url %s/%s not found" % (app_name, table_name))
 
 
-@login_required(login_url="/kingadmin/login/")
+@login_required(login_url="/swing/login")
 def table_del(request, app_name, table_name, obj_id):
     if app_name in site.enabled_admins:
         if table_name in site.enabled_admins[app_name]:
             admin_class = site.enabled_admins[app_name][table_name]
-            objs = admin_class.model.objects.filter(id=obj_id)
+            obj = admin_class.model.objects.filter(id=obj_id)
             if request.method == "POST":
                 delete_tag = request.POST.get("_delete_confirm")
                 if delete_tag == "yes":
-                    objs.delete()
-                    return redirect("/kingadmin/%s/%s/" % (app_name, table_name))
+                    obj.delete()
+                    return redirect("/swing/%s/%s/" % (app_name, table_name))
 
             if admin_class.readonly_table is True:
-                return render(request, 'kingadmin/table_objs_delete.html')
-            return render(request, 'kingadmin/table_objs_delete.html', {
+                return render(request, 'swing/table_obj_delete.html')
+            return render(request, 'swing/table_obj_delete.html', {
                 'model_verbose_name': admin_class.model._meta.verbose_name,
                 'model_name': admin_class.model._meta.model_name,
                 'model_db_table': admin_class.model._meta.db_table,
-                'objs': objs,
+                'obj': obj,
                 'app_name': app_name,
             })
 
 
-@login_required(login_url="/kingadmin/login/")
+@login_required(login_url="/swing/login")
 def table_add(request, app_name, table_name):
     # print("request :",request.POST)
     if app_name in site.enabled_admins:
@@ -258,14 +258,14 @@ def table_add(request, app_name, table_name):
                                 return redirect(redirect_url)
                             else:
                                 print("pop up add windows....")
-            return render(request, 'kingadmin/table_add.html',
+            return render(request,
+                          'swing/table_add.html',
                           {'form_obj': form_obj,
                            'model_name': admin_class.model._meta.model_name,
                            'model_verbose_name': admin_class.model._meta.verbose_name,
                            'model_db_table': admin_class.model._meta.db_table,
                            'admin_class': admin_class,
                            'app_name': app_name,
-                           # 'active_url': '/kingadmin/',
                            'enabled_admins': site.enabled_admins
                            })
 
@@ -273,7 +273,7 @@ def table_add(request, app_name, table_name):
         raise Http404("url %s/%s not found" % (app_name, table_name))
 
 
-@login_required(login_url="/kingadmin/login/")
+@login_required(login_url="/swing/login")
 def personal_password_reset(request):
     app_name = request.user._meta.app_label
     model_name = request.user._meta.model_name
@@ -287,11 +287,11 @@ def personal_password_reset(request):
             url = "/%s/" % request.path.strip("/password/")
             return redirect(url)
 
-    return render(request, 'kingadmin/password_change.html', {'user_obj': request.user,
-                                                              'form': change_form})
+    return render(request, 'swing/password_change.html', {'user_obj': request.user,
+                                                          'form': change_form})
 
 
-@login_required(login_url="/kingadmin/login/")
+@login_required(login_url="/swing/login")
 def password_reset_form(request, app_name, table_db_name, user_id):
     user_obj = request.user._meta.model.objects.get(id=user_id)
     can_change_user_password = False
@@ -308,8 +308,8 @@ def password_reset_form(request, app_name, table_db_name, user_id):
                 url = "/%s/" % request.path.strip("/password/")
                 return redirect(url)
 
-        return render(request, 'kingadmin/password_change.html', {'user_obj': user_obj,
-                                                                  'form': change_form})
+        return render(request, 'swing/password_change.html', {'user_obj': user_obj,
+                                                              'form': change_form})
 
     else:
         return HttpResponse("Only admin user has permission to change password")
