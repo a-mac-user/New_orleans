@@ -1,4 +1,4 @@
-from swing import models
+from fusion import models
 from django import forms
 from swing.base_admin import BaseAdmin, site
 
@@ -128,7 +128,6 @@ class CourseAdmin(BaseAdmin):
     list_display = ('id', 'name', 'period')
 
 
-print('走了my_admin')
 site.register(models.Customer, CustomerAdmin)
 site.register(models.ClassList, ClasslistAdmin)
 site.register(models.Enrollment, EnrollmentAdmin)

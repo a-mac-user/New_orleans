@@ -76,9 +76,8 @@
 <!--main-container-part-->
 <div id="content">
 <!--breadcrumbs-->
-  <div id="content-header">
-    <div id="breadcrumb"> <a href="{% url 'swing' %}" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> 客户相关概览</a></div>
-  </div>
+{% block breadcrumb %}
+{% endblock %}
 <!--End-breadcrumbs-->
   <div class="container-fluid">
       {% block container %}

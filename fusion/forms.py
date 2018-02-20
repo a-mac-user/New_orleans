@@ -1,4 +1,4 @@
-from swing import models
+from fusion import models
 from django.utils import timezone
 from django.db.models import Count
 from django.forms import ModelForm
