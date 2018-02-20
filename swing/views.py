@@ -1,5 +1,6 @@
 import re
 import json
+from fusion import my_admin
 from swing import tables, forms
 from swing.base_admin import site
 from django.contrib.auth.decorators import login_required

@@ -3,7 +3,6 @@
 {% block title %}Swing{% endblock %}
 
 {% block container %}
-    {{ enabled_admins }}{{ current_app }}
 {% for app_name,admin_class_dic in enabled_admins.items %}
 <div class="row">
     <div class="panel panel-info col-md-8 ">
