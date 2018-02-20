@@ -73,9 +73,9 @@ def batch_update(request, editable_data, admin_class):
 def display_table_list(request, app_name, table_name, embed=False):
     """
     :param request:
-    :param app_name:
-    :param table_name:
-    :param embed: 若此函数是被另一个view调用的，则embed=True,嵌入时可开启
+    :param app_name:app名
+    :param table_name:表名
+    :param embed: 若此函数是被另一个view调用的，则embed=True,嵌入时应开启
     :return:
     """
 

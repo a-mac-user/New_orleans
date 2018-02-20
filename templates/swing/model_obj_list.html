@@ -1,10 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load swing_tag %}
 
-</body>
-</html>
+{% block title %}
+{{ table_obj.model_verbose_name }}
+{% endblock %}
+
+{% block breadcrumb %}
+    <ol class="breadcrumb">
+        <li><a href="{% url 'swing' %}">Home</a></li>
+        <li><a href="{% url 'app_tables' app_name %}">{{ app_name|capfirst}}</a></li>
+        <li class="active"> {{ table_obj.model_verbose_name }}</li>
+    </ol>
+ {% endblock %}
+{% block page-content %}
+
+{% include "swing/object_list_table.html" %}
+
+{% endblock %}
+
+{% block bottom-js %}
+    {% include 'swing/object_list_table_editable_js.html' %}
+{% endblock %}
