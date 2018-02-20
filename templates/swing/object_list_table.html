@@ -4,10 +4,9 @@
     <div class="panel-heading">
         <h3 class="panel-title">Select {{ table_obj.model_verbose_name }} to change
         <a href="{% url 'table_add' app_name table_obj.model_name %}" class="btn btn-success btn-labeled fa fa-plus-circle pull-right">
-            Add {{ table_obj.model_verbose_name }}
+            增加 {{ table_obj.model_verbose_name }}
         </a>
         </h3>
-
     </div>
     <div class="panel-body">
             {% if errors %}
@@ -27,7 +26,7 @@
            {% if table_obj.list_filter%}
             <form >
                 <div class="row">
-                    {% include 'swing/filter_search_box.html' %}
+{#                    {% include 'swing/filter_search_box.html' %}#}
                     {% for filter_column in table_obj.list_filter %}
                         <div class="col-md-3" style="margin-bottom: 15px">
                             {{ filter_column.verbose_name }} &nbsp;
@@ -79,17 +78,14 @@
                                     }else {
                                         $(ele).prop("checked", false);
                                     }
-
                             });
                         }
-
                         function DoTheAction(form_ele) {
                             var post_args = {
                                 'selected_ids':[],
                                 'model_name' : "{{ table_obj.model_db_table }}",
                                 'action': $("#admin_action").val()
                             };
-
 
                             $(".table-responsive input[tag='row-check']").each(function (index,ele) {
                                 if ($(ele).prop("checked") == true){
@@ -114,7 +110,6 @@
 
                             return true;
                         }
-
                     </script>
                     <th><input type="checkbox"  onclick="SelectAllRows()"></th>
                     {% if  table_obj.list_display %}
@@ -123,7 +118,6 @@
                                 <a href="?page={{ table_obj.query_sets.number }}&orderby={% if table_obj.orderby_col_index == forloop.counter0 %}{{ table_obj.orderby_field}}{% else %}{{ column }}{% endif %}{% for k,v in request.GET.items %}{% if k != 'page' and  k != 'orderby' %}&{{ k }}={{ v }}{% endif %}{% endfor %}" >
                                     {% get_table_column column table_obj %}
                                     {% display_orderby_arrow table_obj forloop.counter0 %}
-
                                 </a>
                             </th>
 
@@ -136,8 +130,7 @@
                 <tbody id="model_table_data">
                     {% for row in table_obj.query_sets %}
                     <tr>
-                        {% build_table_row  row table_obj    %}
-
+                        {% build_table_row row table_obj %}
                     </tr>
                     {% endfor %}
                 </tbody>
@@ -183,17 +176,13 @@
             </table>
         </div>
     </div>
-
 </div>
 
-
 <script>
-
     function PrepareFormData(form_ele) {
         var form_data = [];
         $("#model_table_data tr").each(function () {
             var obj_id = $(this).children().first().find("input").val();
-
             console.log(obj_id);
             if (obj_id){ //table obj row
                 var row_data = {};//all columns need to be updated
@@ -202,14 +191,10 @@
                     row_data[$(this).attr("name")] = $(this).val();
                 });//end find each
                 row_data['id'] = obj_id;
-
                 form_data.push(row_data);
             }
-
         });//end each
-
         console.log(form_data);
-
         var ele = '<input type="hidden" name="editable_data" value=' + JSON.stringify(form_data) + ' >';
         $(form_ele).append(ele);
 

@@ -44,9 +44,9 @@ class TableHandler(object):
         self.actions = admin_class.actions
         self.list_editable = admin_class.list_editable
         self.query_sets = query_sets
-        # self.choice_fields = admin_class.choice_fields
-        # self.fk_fields = admin_class.fk_fields
-        # self.onclick_fields = admin_class.onclick_fields
+        self.choice_fields = admin_class.choice_fields
+        self.fk_fields = admin_class.fk_fields
+        self.onclick_fields = admin_class.onclick_fields
         self.readonly_table = admin_class.readonly_table
         self.readonly_fields = admin_class.readonly_fields
         self.list_display = admin_class.list_display

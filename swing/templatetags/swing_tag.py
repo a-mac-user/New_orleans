@@ -80,22 +80,27 @@ def build_table_row(row_obj, table_obj, onclick_column=None, target_link=None):
     row_ele += "<td><input type='checkbox' tag='row-check' value='%s' > </td>" % row_obj.id
 
     for index, column_name in enumerate(table_obj.list_display):
-
         if hasattr(row_obj, column_name):
             field_obj = row_obj._meta.get_field(column_name)
             column_data = field_obj._get_val_from_obj(row_obj)
+
             if column_name in table_obj.choice_fields:
                 column_data = getattr(row_obj, 'get_%s_display' % column_name)()
+
             if column_name in table_obj.fk_fields:
                 column_data = r"%s" % getattr(row_obj, column_name).__str__().strip("<>")
+
             if 'DateTimeField' in field_obj.__repr__():
                 column_data = getattr(row_obj, column_name).strftime("%Y-%m-%d %H:%M:%S") \
                         if getattr(row_obj, column_name) else None
+
             if 'ManyToManyField' in field_obj.__repr__():
                 column_data = getattr(row_obj, column_name).select_related().count()
+
             if onclick_column == column_name:
                 column = ''' <td><a class='btn-link' href=%s>%s</a></td> ''' %\
                          (url_reverse(target_link, args=(column_data, )), column_data)
+
             if column_name in table_obj.onclick_fields:
                 column = '''<td><a class='btn-link' href='%s' target='_blank'>%s</a></td>''' % \
                          (url_reverse(table_obj.onclick_fields[column_name], args=(row_obj.id, )),
@@ -118,7 +123,7 @@ def build_table_row(row_obj, table_obj, onclick_column=None, target_link=None):
         elif hasattr(table_obj.admin_class, column_name):  # customized field
             field_func = getattr(table_obj.admin_class, column_name)
             table_obj.admin_class.instance = row_obj
-            column = "<td>%s</td>" % field_func()
+            column = "<td>%s</td>" % field_func
 
         row_ele += column
     # for dynamic display
@@ -287,7 +292,7 @@ def get_m2m_obj(rel_field_name, form_obj):
 def load_admin_actions(table_obj):
     print('---actions', table_obj)
     select_ele = "<select id='admin_action' name='admin_action' class='form-control' ><option value=''>----</option>"
-    for option in table_obj.default_actions:
+    for option in table_obj.actions:
         action_display_name = option
         if hasattr(table_obj.admin_class, option):
             action_func = getattr(table_obj.admin_class, option)

@@ -2,7 +2,7 @@
 {% load swing_tag %}
 
 {% block title %}
-{{ table_obj.model_verbose_name }}
+    {{ table_obj.model_verbose_name }}
 {% endblock %}
 
 {% block breadcrumb %}
@@ -11,10 +11,10 @@
         <li><a href="{% url 'app_tables' app_name %}">{{ app_name|capfirst}}</a></li>
         <li class="active"> {{ table_obj.model_verbose_name }}</li>
     </ol>
- {% endblock %}
+{% endblock %}
 
 {% block container %}
-{% include "swing/object_list_table.html" %}
+    {% include "swing/object_list_table.html" %}
 {% endblock %}
 
 {% block js %}
