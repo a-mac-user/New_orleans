@@ -12,12 +12,11 @@
         <li class="active"> {{ table_obj.model_verbose_name }}</li>
     </ol>
  {% endblock %}
-{% block page-content %}
 
+{% block container %}
 {% include "swing/object_list_table.html" %}
-
 {% endblock %}
 
-{% block bottom-js %}
+{% block js %}
     {% include 'swing/object_list_table_editable_js.html' %}
 {% endblock %}

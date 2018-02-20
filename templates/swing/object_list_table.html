@@ -24,10 +24,10 @@
                 {% endfor %}
             </div>
             {% endif %}
-           {% if  table_obj.list_filter%}
+           {% if table_obj.list_filter%}
             <form >
                 <div class="row">
-                    {% include 'kingadmin/filter_search_box.html' %}
+                    {% include 'swing/filter_search_box.html' %}
                     {% for filter_column in table_obj.list_filter %}
                         <div class="col-md-3" style="margin-bottom: 15px">
                             {{ filter_column.verbose_name }} &nbsp;
@@ -62,14 +62,8 @@
                 <div class="col-md-1">
                     <button class=" btn-default " >执行</button>
                 </div>
-
-
             </form>
-
-
         </div>
-
-
 
         <div class="table-responsive">
             <table class="table table-hover">
@@ -106,11 +100,11 @@
 
                             console.log(post_args);
                             if (post_args.selected_ids.length == 0){
-                                alert("必须选中一条或多条纪录进行操作!")
+                                alert("必须选中一条或多条纪录进行操作!");
                                 return false;
                             }
                             if (post_args.action == ""){
-                                alert("必须选中一个action进行操作!")
+                                alert("必须选中一个action进行操作!");
                                 return false;
                             }
 
@@ -195,8 +189,6 @@
 
 <script>
 
-
-
     function PrepareFormData(form_ele) {
         var form_data = [];
         $("#model_table_data tr").each(function () {
@@ -216,12 +208,11 @@
 
         });//end each
 
-        console.log(form_data)
+        console.log(form_data);
 
         var ele = '<input type="hidden" name="editable_data" value=' + JSON.stringify(form_data) + ' >';
         $(form_ele).append(ele);
 
         return true;
     }
-
 </script>

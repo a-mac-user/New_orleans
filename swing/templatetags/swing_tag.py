@@ -285,7 +285,7 @@ def get_m2m_obj(rel_field_name, form_obj):
 
 @register.simple_tag
 def load_admin_actions(table_obj):
-    print('---actions', table_obj.default_actions)
+    print('---actions', table_obj)
     select_ele = "<select id='admin_action' name='admin_action' class='form-control' ><option value=''>----</option>"
     for option in table_obj.default_actions:
         action_display_name = option
