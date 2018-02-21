@@ -21,7 +21,7 @@ def acc_login(request):
         user = authenticate(username=email, password=password)
         if user:
             login(request, user)
-            request.session.set_expiry(60*60)
+            request.session.set_expiry(60*60*100)
             return HttpResponseRedirect(request.GET.get('next') if request.GET.get('next') else '/entry')
         else:
             error["error"] = 'Wrong username or password!'

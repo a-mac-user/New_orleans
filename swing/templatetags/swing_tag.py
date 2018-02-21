@@ -45,14 +45,12 @@ def load_search_element(table_obj):
         placeholder = "search by %s" % ",".join(table_obj.search_fields)
         ele = '''
             <div class="searchbox">
-               <form method="get">
-                    <div class="input-group custom-search-form">
+               <form method="get" class="span5">
                         <input type="text" name="q" value='%s' class="form-control" placeholder="%s">
                         %s
                         <span class="input-group-btn">
-                            <button class="text-muted" type="button"><i class="fa fa-search"></i></button>
+                            <button class="btn btn-success"><i class="fa fa-search"></i></button>
                         </span>
-                    </div>
                </form>
            </div>
 

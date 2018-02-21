@@ -1,19 +1,24 @@
 {% load swing_tag %}
 
-<div class="panel">
-    <div class="panel-heading">
-        <h3 class="panel-title">Select {{ table_obj.model_verbose_name }} to change
-        <a href="{% url 'table_add' app_name table_obj.model_name %}" class="btn btn-success btn-labeled fa fa-plus-circle pull-right">
-            增加 {{ table_obj.model_verbose_name }}
-        </a>
-        </h3>
-    </div>
-    <div class="panel-body">
+<div class="row-fluid">
+    <div class="span11">
+        <div class="widget-box">
+            <div class="widget-title">
+                <span class="icon">
+                    <i class="icon-align-justify"></i>
+                </span>
+                <h5>Select {{ table_obj.model_verbose_name }} to change</h5>
+                <div class="panel-heading">
+                    <a href="{% url 'table_add' app_name table_obj.model_name %}" class="btn btn-success pull-right">
+                    增加 {{ table_obj.model_verbose_name }}
+                    </a>
+                </div>
+            </div>
+            <div class="widget-content nopadding">
             {% if errors %}
-            <div >
+            <div>
                 <h3 style="color: red;">Below errors happened during updating data!</h3>
                 {% for form_errs in errors %}
-
                     <ul>
                         <li style="color: red;font-weight: bold">{{ form_errs.1 }}</li>
                         {% for k,err in form_errs.0.items %}
@@ -23,15 +28,15 @@
                 {% endfor %}
             </div>
             {% endif %}
+
            {% if table_obj.list_filter%}
             <form >
-                <div class="row">
+                <div class="controls controls-row" style="margin: 20px 0 10px 50px">
 {#                    {% include 'swing/filter_search_box.html' %}#}
                     {% for filter_column in table_obj.list_filter %}
-                        <div class="col-md-3" style="margin-bottom: 15px">
-                            {{ filter_column.verbose_name }} &nbsp;
+                        <div class="span1" style="">{{ filter_column.verbose_name }} &nbsp;</div>
                             <i style="cursor: pointer" data-target="#modal-dialog" data-toggle="modal" class="fa fa-search" aria-hidden="true" onclick="PrepareFilterSearch('{{ filter_column.column_name }}')"></i>
-                            <select data-tag="{{ filter_column.column_name }}" name="{{ filter_column.column_name }}" class="form-control" >
+                            <select data-tag="{{ filter_column.column_name }}" name="{{ filter_column.column_name }}" class="form-control span2" >
                                 {% for choice in filter_column.choices %}
                                     {% if filter_column.selected == choice.0|to_string  %}
                                         <option value="{{ choice.0 }}" selected>{{ choice.1 }}</option>
@@ -40,26 +45,21 @@
                                     {% endif %}
                                 {% endfor %}
                             </select>
-
-                        </div>
                     {% endfor %}
-                    <div class="col-md-3">
-                        <input type="submit" class="btn btn-success" value="开始过滤">
-                    </div>
+                        <div class="span1">
+                            <input type="submit" class="btn btn-success" value="开始过滤">
+                        </div>
                 </div>
             </form>
-        {% endif %}
-
+           {% endif %}
+        <div class="controls-row controls" style="margin: 0 0 10px 50px">
         {% load_search_element table_obj  %}
 
-        <div class="row" style="margin-top: 10px">
             <form method="post" onsubmit="return DoTheAction(this)">{% csrf_token %}
                 <input type="hidden" name="model_db_table" value="{{ table_obj.model_db_table }}">
-                <div class="col-md-2">
+                <div class="span5">
                     {%  load_admin_actions table_obj %}
-                </div>
-                <div class="col-md-1">
-                    <button class=" btn-default " >执行</button>
+                    <button class="btn btn-success" >执行</button>
                 </div>
             </form>
         </div>
@@ -136,7 +136,7 @@
                 </tbody>
             <footer>
               <tr>
-                    <td colspan="12" class="footable-visible">
+                  <td colspan="12" class="footable-visible">
                         <div class="pagination">
 
                             <nav>
@@ -170,13 +170,15 @@
                             </div>
                         {% endif %}
                     </td>
-
               </tr>
             </footer>
             </table>
         </div>
     </div>
 </div>
+            </div>
+        </div>
+
 
 <script>
     function PrepareFormData(form_ele) {
