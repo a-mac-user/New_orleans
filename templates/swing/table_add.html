@@ -7,53 +7,52 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    <ol class="breadcrumb">
-        <li><a href="{% url 'swing' %}">Home</a></li>
-        <li><a href="{% url 'app_tables'  app_name %}">{{ app_name|capfirst }}</a></li>
-        <li><a href="{% url 'table_list' app_name model_name %}">{{ model_verbose_name }}</a></li>
-        <li class="active"> 添加 {{ model_verbose_name }}</li>
-    </ol>
+    <div id="breadcrumb">
+        <a href="{% url 'swing' %}"><i class="icon-home"></i>客户相关</a>
+        <a href="{% url 'app_tables'  app_name %}">{{ app_name|capfirst }}</a>
+        <a href="{% url 'table_list' app_name model_name %}">{{ model_verbose_name }}</a>
+        <a>增加 {{ model_verbose_name }}</a>
+    </div>
 {% endblock %}
 
 {% block container %}
 {#    {% include 'swing/filter_search_box.html' %}#}
     {% check_pop_up_window request form_obj %}
-<div class="panel">
-    <div class="panel-heading">
-        <h3 class="panel-title">Add {{ table_obj.model_verbose_name }}
-            <a  href="{% url 'table_list' app_name model_name %}" class="btn btn-sm btn-info btn-labeled fa fa-mail-reply pull-right">
-               返回 {{ table_obj.model_verbose_name }}
-            </a>
-        </h3>
-    </div>
+<div class="row-fluid">
+    <div class="span7">
+        <div class="widget-box">
+            <div class="widget-title">
+                <span class="icon">
+                    <i class="icon-align-justify"></i>
+                </span>
+                <h5 class="panel-title">增加 {{ model_verbose_name }}</h5>
+            </div>
 
-    <form method="post" onsubmit="return CheckSelectedOptions()" class=" form-horizontal form-padding">{% csrf_token %}
-{#    <form method="post" class=" form-horizontal form-padding">{% csrf_token %}#}
-        <div class="panel-body">
-            {% if form_obj.errors%}
-                <div class="alert alert-danger media fade in">
+            <div class="widget-content nopadding">
+                <form method="post" onsubmit="return CheckSelectedOptions()" class=" form-horizontal">{% csrf_token %}
+                    {% if form_obj.errors%}
+                    <div class="alert alert-danger media fade in">
                     <strong>表单错误</strong> {% get_form_global_error form_obj.errors %}
-                </div>
+                    </div>
 {#                {% printf form_obj.errors %}#}
-            {% endif %}
-            {% for field in form_obj %}
-                <div class="form-group">
+                    {% endif %}
+                    {% for field in form_obj %}
+                        <div class=control-group>
                     {%if field.field.required%}
-                        <label class="col-md-2 control-label">
+                        <label class="control-label">
                             <b>{{field.label}}</b>
                         </label>
                     {% else %}
-                        <label class="col-md-2 control-label">
+                        <label class="control-label">
                            {{field.label}}
                         </label>
                     {% endif %}
-                    <div class="col-md-9">
+                    <div class="controls">
                         {% if field.name not in admin_class.filter_horizontal %}
                             {{ field }}
                             {% add_fk_search_btn form_obj field %}
                             {% add_new_obj_btn form_obj field %}
 
-{#                            {% decorate_date_field form_obj field %}#}
                             {% if field.errors %}
                                 <span style="color: red">{{ field.errors }}</span>
                             {% endif %}
@@ -63,26 +62,19 @@
                                 <span style="color: red">{{ field.errors }}</span>
                             {% endif %}
                         {% endif %}
+                        </div>
                     </div>
-                </div>
-            {% endfor %}
-
-
-        </div> <!--end panel-body-->
-        <div class="panel-footer">
-            <div class="row">
-
-                <div class="col-sm-4 col-lg-offset-1 ">
-                    <button class="btn btn-info  "  type="submit">增加</button>
-                </div>
-                <div class="col-sm-6 ">
-                    <button class="btn btn-success " name="_continue" type="submit">保存并继续修改</button>
-                    &nbsp;
-                    <button type="submit" class="btn btn-info  " name="_add_another"   >保存并增加另一个</button>
-                </div>
+                {% endfor %}
+                <!--end panel-body-->
+                    <div class="form-actions">
+                        <button class="btn btn-info" type="submit">保存</button>
+                        <button class="btn btn-success pull-right" name="_continue" type="submit">保存并继续修改</button>
+                        <button type="submit" class="btn btn-info pull-right" style="margin-right: 5px" name="_add_another">保存并增加另一个</button>
+                    </div>
+                </form>
             </div>
         </div>
-    </form>
+    </div>
 </div>
 
 {% endblock %}
