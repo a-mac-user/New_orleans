@@ -43,7 +43,7 @@ class CustomerAdmin(BaseAdmin):
     readonly_fields = ('consultant', 'status')
     search_fields = ('qq', 'consultant__email')
     colored_fields = {
-        'status': {'已报名': "rgba(145, 255, 0, 0.78)",
+        'status': {'已报名': "rgba(185, 185, 185)",
                    '未报名': "#ddd"},
     }
 

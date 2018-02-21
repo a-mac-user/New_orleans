@@ -1,5 +1,6 @@
 import re
 from django import template
+from swing.base_admin import site
 from django.utils.safestring import mark_safe
 from django.core.urlresolvers import reverse as url_reverse
 
@@ -46,11 +47,9 @@ def load_search_element(table_obj):
         ele = '''
             <div class="searchbox">
                <form method="get" class="span5">
-                        <input type="text" name="q" value='%s' class="form-control" placeholder="%s">
-                        %s
-                        <span class="input-group-btn">
-                            <button class="btn btn-success"><i class="fa fa-search"></i></button>
-                        </span>
+                    <input type="text" name="q" value='%s' class="form-control" placeholder="%s">
+                    %s
+                    <button class="btn btn-danger" style="margin:0 0 10px 25px">搜索</button>
                </form>
            </div>
 
@@ -410,3 +409,107 @@ def display_obj_related(obj):
         # model_class = obj[0]._meta.model
         mode_name = obj[0]._meta.model_name
         return mark_safe(recursive_related_obj_lookup(obj, mode_name))
+
+
+@register.simple_tag
+def get_form_global_error(obj):
+
+    form_err = obj.as_data().get('__all__')
+    if form_err:
+        return form_err
+    else:
+        return ''
+
+
+@register.simple_tag
+def printf(obj):
+    print("printf debug:", obj)
+    print("printf debug dir :", dir(obj))
+    print("printf debug dir :", obj.as_data())
+
+
+@register.simple_tag
+def check_pop_up_window(request, form_obj):
+    """check if needs to close this window"""
+    # print("check_pop_up_window:",request.get_full_path(),[form_obj.errors],request.method)
+    if "_popup=1" in request.get_full_path():
+        if request.method == "POST":
+            if not form_obj.errors:
+                to_field_name = request.get_full_path().split('_to_field=')[1]
+
+                ele = '''
+                <script type='text/javascript'>
+                    //window.close();
+                    window.opener.popupCallback('pop some data','%s', '%s','%s'); //Call callback function
+                    window.close();
+                </script>
+                ''' % (form_obj.instance.id, form_obj.instance, to_field_name)
+                # print('call popupCallback function')
+                return mark_safe(ele)
+        return ''
+    else:
+        return ''
+
+
+@register.simple_tag
+def add_new_obj_btn(form_obj, field):
+    """put a add btn for foreignkey and m2m field"""
+    # print("add_new_obj_btn site enabled ",site.enabled_admins)
+    field_obj = form_obj.instance._meta.get_field(field.name)
+    field_type = field_obj.get_internal_type()
+
+    if field_type in ("ForeignKey", "ManyToManyField"):
+        app_label = field_obj.rel.to()._meta.app_label
+        model_name = field_obj.rel.to()._meta.model_name
+        if app_label in site.enabled_admins:
+            if model_name in site.enabled_admins.get(app_label):  # make sure this class is registered
+
+                if field.name not in form_obj.Meta.admin.readonly_fields:
+                    popup_window = '/kingadmin/{app}/{model}/add/?_popup=1&_to_field={field_name}'.format(
+                        app=field_obj.rel.to()._meta.app_label,
+                        model=field_obj.rel.to()._meta.model_name,
+                        field_name=field.name,
+                    )
+                    print("pop up win", popup_window)
+                    ele = '''
+                            &nbsp;&nbsp;&nbsp;<i style="cursor: pointer;color:#44ce44"
+                            class="fa fa-plus" aria-hidden="true"
+                            onclick="PopUpWindow('%s')"></i>''' % popup_window
+                    return mark_safe(ele)
+
+    return ''
+
+
+@register.simple_tag
+def get_m2m_obj(rel_field_name, form_obj):
+    # print("get_m2m_obj", [rel_field_name,form_obj])
+    # return
+    # print("has attr m2m",hasattr(model_obj,rel_field_name))
+    try:
+        m2m_obj = getattr(form_obj.instance, rel_field_name)
+        # print("m2m obj:",m2m_obj)
+        return m2m_obj.model.objects.all()
+    except Exception as e:
+        # print("err",e)
+        # teachers.rel.to.objects.all()
+        m2m_field_obj = getattr(form_obj.Meta.model, rel_field_name)
+        return m2m_field_obj.rel.to.objects.all()
+        # return model_obj._meta.model.bind_hosts.through.bindhosts.get_queryset()
+        # return
+        #  to deal ValueError: "<UserProfile: >" needs to have a value for field "userprofile"
+        #  before this many-to-many relationship can be used.
+
+
+@register.simple_tag
+def get_chosen_m2m_obj(form_field_obj, model_obj):
+    # return chosen m2m obj
+    # print("367 model obj", model_obj)
+    selected_pks = form_field_obj.value()
+    try:
+        m2m_obj = getattr(model_obj, form_field_obj.name)
+        selected_obj = m2m_obj.select_related().filter(id__in=selected_pks)
+        # print("get_chosen_m2m_obj", form_field_obj.value(), selected_objs)
+        # print(selected_obj.values())
+        return selected_obj
+    except Exception as e:
+        return []

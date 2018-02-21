@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 
 class Customer(models.Model):
     # 储存客户信息
-    qq = models.CharField(max_length=64, unique=True, help_text=u'qq是唯一标识')
+    qq = models.CharField(u'QQ', max_length=64, unique=True, help_text=u'qq是唯一标识')
     name = models.CharField(u'姓名', max_length=32, null=True, blank=True, help_text=u'注册后请改为真实名字')
     qq_name = models.CharField(u'QQ名称', max_length=64, null=True, blank=True)
     phone = models.CharField(u'手机号', max_length=64, null=True, blank=True)
@@ -41,7 +41,7 @@ class Customer(models.Model):
                                       null=True,
                                       related_name="internal_referral")
     content = models.TextField(verbose_name='咨询详情', blank=True, null=True)
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(u'记录时间', auto_now_add=True)
     memo = models.TextField(u'备注', blank=True, null=True)
 
     consultant = models.ForeignKey('UserProfile', verbose_name=u'咨询顾问')
