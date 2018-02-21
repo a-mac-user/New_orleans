@@ -4,12 +4,10 @@
 {% block title %}Swing{% endblock %}
 
 {% block breadcrumb %}
-<div id="content-header">
-    <ol class="breadcrumb">
-        <li class="active"><a href="{% url 'swing' %}" class="tip-bottom"><i class="icon-home"></i> 客户相关</a></li>
-        <li class="active">{{ current_app }}</li>
-    </ol>
-</div>
+    <div id="breadcrumb">
+        <a href="{% url 'swing' %}" class="tip-bottom"><i class="icon-home"></i> 客户相关</a>
+        <a>{{ current_app|capfirst }}</a>
+    </div>
 {% endblock %}
 
 {% block container %}

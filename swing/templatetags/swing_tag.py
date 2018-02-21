@@ -36,7 +36,7 @@ def get_table_column(column, table_obj):
 
 @register.simple_tag
 def load_search_element(table_obj):
-    print("search:", table_obj.search_fields)
+    # print("search:", table_obj.search_fields)
     if table_obj.search_fields:
         already_exist_ars = ''
         for k, v in table_obj.request.GET.items():
@@ -134,13 +134,13 @@ def build_table_row(row_obj, table_obj, onclick_column=None, target_link=None):
             dy_fk = getattr(row_obj, table_obj.dynamic_fk)  # 拿到的是asset_type的值
             if hasattr(row_obj, dy_fk):
                 dy_fk_obj = getattr(row_obj, dy_fk)
-                print("-->type", type(dy_fk_obj), dy_fk_obj)
+                # print("-->type", type(dy_fk_obj), dy_fk_obj)
                 for index, column_name in enumerate(table_obj.dynamic_list_display):
                     if column_name in table_obj.dynamic_choice_fields:
                         column_data = getattr(dy_fk_obj, 'get_%s_display' % column_name)()
                     else:
                         column_data = dy_fk_obj._meta.get_field(column_name)._get_val_from_obj(dy_fk_obj)
-                    print("dynamic column data", column_data)
+                    # print("dynamic column data", column_data)
 
                     column = "<td>%s</td>" % column_data
                     row_ele += column
@@ -259,7 +259,7 @@ def to_string(value):
 
 @register.simple_tag
 def get_db_table_name(table_admin_class):
-    print("table_admin_class", table_admin_class.model)
+    # print("table_admin_class", table_admin_class.model)
     return table_admin_class.model._meta.verbose_name
 
 
@@ -270,7 +270,7 @@ def get_attr(obj):
 
 @register.simple_tag
 def get_m2m_obj(rel_field_name, form_obj):
-    print("get_m2m_obj", [rel_field_name, form_obj])
+    # print("get_m2m_obj", [rel_field_name, form_obj])
     # return
     # print("has attr m2m",hasattr(model_obj,rel_field_name))
     try:
@@ -290,7 +290,7 @@ def get_m2m_obj(rel_field_name, form_obj):
 
 @register.simple_tag
 def load_admin_actions(table_obj):
-    print('---actions', table_obj)
+    # print('---actions', table_obj)
     select_ele = "<select id='admin_action' name='admin_action' class='form-control' ><option value=''>----</option>"
     for option in table_obj.actions:
         action_display_name = option

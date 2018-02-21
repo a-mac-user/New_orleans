@@ -6,11 +6,11 @@
 {% endblock %}
 
 {% block breadcrumb %}
-    <ol class="breadcrumb">
-        <li><a href="{% url 'swing' %}">Home</a></li>
-        <li><a href="{% url 'app_tables' app_name %}">{{ app_name|capfirst}}</a></li>
-        <li class="active"> {{ table_obj.model_verbose_name }}</li>
-    </ol>
+    <div id="breadcrumb">
+        <a href="{% url 'swing' %}"><i class="icon-home"></i> 客户相关</a>
+        <a href="{% url 'app_tables' app_name %}">{{ app_name|capfirst}}</a>
+        <a>{{ table_obj.model_verbose_name }}</a>
+    </div>
 {% endblock %}
 
 {% block container %}
