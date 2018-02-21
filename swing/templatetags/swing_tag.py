@@ -470,7 +470,7 @@ def add_new_obj_btn(form_obj, field):
                         model=field_obj.rel.to()._meta.model_name,
                         field_name=field.name,
                     )
-                    print("pop up win", popup_window)
+                    # print("pop up win", popup_window)
                     ele = '''
                             &nbsp;&nbsp;&nbsp;<i style="cursor: pointer;color:#44ce44"
                             class="fa fa-plus" aria-hidden="true"

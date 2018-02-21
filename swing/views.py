@@ -73,8 +73,8 @@ def batch_update(request, editable_data, admin_class):
 def display_table_list(request, app_name, table_name, embed=False):
     """
     :param request:
-    :param app_name:app名
-    :param table_name:表名
+    :param app_name:    app名
+    :param table_name:  表名
     :param embed: 若此函数是被另一个view调用的，则embed=True,嵌入时应开启
     :return:
     """
@@ -85,9 +85,9 @@ def display_table_list(request, app_name, table_name, embed=False):
         if table_name in site.enabled_admins[app_name]:
             admin_class = site.enabled_admins[app_name][table_name]
 
-            if request.method == "POST":  # action 来了
+            if request.method == "POST":  # 处理action
 
-                print(request.POST)
+                # print(request.POST)
 
                 editable_data = request.POST.get("editable_data")
                 if editable_data:  # for list editable
@@ -167,7 +167,7 @@ def table_change(request, app_name, table_name, obj_id, embed=False):
                 form_obj = model_form(instance=obj)
 
             elif request.method == "POST":
-                print("post:", request.POST)
+                # print("post:", request.POST)
                 form_obj = model_form(request.POST, instance=obj)
                 if form_obj.is_valid():
                     form_obj.validate_unique()
@@ -195,11 +195,11 @@ def table_del(request, app_name, table_name, obj_id):
     if app_name in site.enabled_admins:
         if table_name in site.enabled_admins[app_name]:
             admin_class = site.enabled_admins[app_name][table_name]
-            obj = admin_class.model.objects.filter(id=obj_id)
+            objs = admin_class.model.objects.filter(id=obj_id)
             if request.method == "POST":
                 delete_tag = request.POST.get("_delete_confirm")
                 if delete_tag == "yes":
-                    obj.delete()
+                    objs.delete()
                     return redirect("/swing/%s/%s/" % (app_name, table_name))
 
             if admin_class.readonly_table is True:
@@ -207,8 +207,9 @@ def table_del(request, app_name, table_name, obj_id):
             return render(request, 'swing/table_obj_delete.html', {
                 'model_verbose_name': admin_class.model._meta.verbose_name,
                 'model_name': admin_class.model._meta.model_name,
+                'table_name': admin_class.model._meta.model_name,
                 'model_db_table': admin_class.model._meta.db_table,
-                'obj': obj,
+                'objs': objs,
                 'app_name': app_name,
             })
 

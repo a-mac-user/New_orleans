@@ -1,10 +1,21 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load swing_tag %}
 
-</body>
-</html>
+{% block title %}
+{{ model_verbose_name }}
+{% endblock %}
+
+{% block breadcrumb %}
+    <div id="breadcrumb">
+        <a href="{% url 'swing' %}"><i class="icon-home"></i> 客户相关</a>
+        <a href="{% url 'app_tables' app_name %}">{{ app_name|capfirst }}</a>
+        <a href="{% url 'table_list' app_name model_name %}">{{ model_verbose_name }}</a>
+        <a> 修改 {{ model_verbose_name }}</a>
+    </div>
+ {% endblock %}
+
+{% block container %}
+{#{% include 'swing/filter_search_box.html' %}#}
+{% include 'swing/object_change.html' %}
+
+{% endblock %}

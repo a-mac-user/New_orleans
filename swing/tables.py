@@ -1,6 +1,6 @@
 import time
 from django.utils import timezone
-from django.db.models import Count
+from django.db.models import Count, Q
 
 
 def search_by(request, querysets, admin_form):
@@ -131,5 +131,5 @@ def table_filter(request, model_admin, models_class):
                 else:
                     filter_conditions[condition] = request.GET.get(condition)
 
-    print("filter conditions", filter_conditions)
+    # print("filter conditions", filter_conditions)
     return models_class.objects.filter(**filter_conditions)

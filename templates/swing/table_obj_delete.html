@@ -1,10 +1,49 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'base.html' %}
+{% load swing_tag %}
 
-</body>
-</html>
+{% block title %}删除动作{% endblock %}
+
+{% block breadcrumb %}
+    <div id="breadcrumb">
+        <a href="{% url 'swing' %}"><i class="icon-home"></i> 客户相关</a>
+        <a href="{% url 'app_tables' app_name %}">{{ app_name|capfirst }}</a>
+        <a href="{% url 'table_list' app_name table_name %}">{{ model_verbose_name }}</a>
+        <a> 删除 {{ model_verbose_name }}</a>
+    </div>
+{% endblock %}
+
+{% block container %}
+{#{% include 'swing/filter_search_box.html' %}#}
+<div class="panel">
+    <form method="post" class=" form-horizontal form-padding">{% csrf_token %}
+        <div class="panel-body">
+        <div class="alert alert-danger media fade in" style="margin-top: 20px">
+            <strong>警告!</strong> 以下关联的数据均将被删除
+        </div>
+            {% if objs %}
+                {% display_obj_related objs %}
+            {% endif %}
+            {% if errors %}
+                <span style="color: red">{{ errors }}</span>
+            {% endif %}
+            <select name="deleted_objs" multiple hidden>
+                {% for obj in objs %}
+                <option value="{{ obj.id }}" selected>{{ obj }}</option>
+                {% endfor %}
+            </select>
+{#            <a class="btn-link" style="color: red" href="/admin/{{ app_label }}/{{ model_table_name }}/{{ obj.id }}/delete/">请点击此处前往后台页面删除数据，应确保只有管理员有权操作！</a>#}
+        </div> <!--end panel-body-->
+        <div class="panel-footer" style="margin: 15px 0 0 70px">
+            <div class="row">
+                <input type="hidden" name="_delete_confirm" value="yes">
+                <input type="hidden" name="selected_ids" value="{{ selected_ids }}">
+                <input type="hidden" name="admin_action" value="{{ admin_action }}">
+                {% if not errors %}
+                    <button class="btn btn-danger" type="submit">删除</button>
+                {% endif %}
+                    <a href="{{ request.path }}" class="btn btn-info">取消</a>
+            </div>
+        </div>
+    </form>
+</div>
+{% endblock %}

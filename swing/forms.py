@@ -46,7 +46,7 @@ def default_clean(self):
     # form defautl clean method
     # print("\033[41;1mrun form defautl clean method...\033[0m",dir(self))
     # print(self.Meta.admin.readonly_fields)
-    print("cleaned_dtat:", self.cleaned_data)
+    # print("cleaned_dtat:", self.cleaned_data)
     # print("validataion errors:",self.errors)
     if self.Meta.admin.readonly_table is True:
         raise forms.ValidationError("This is a readonly table!")
@@ -56,7 +56,7 @@ def default_clean(self):
         for field in self.Meta.admin.readonly_fields:
             old_field_val = getattr(self.instance, field)
             form_val = self.cleaned_data.get(field)
-            print("filed differ compare:", old_field_val, form_val)
+            # print("filed differ compare:", old_field_val, form_val)
             if old_field_val != form_val:
                 if self.Meta.partial_update:  # for list_editable feature
                     if field not in self.cleaned_data:

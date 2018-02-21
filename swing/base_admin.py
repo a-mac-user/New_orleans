@@ -17,6 +17,7 @@ class BaseAdmin(object):
 
     def delete_selected_objs(self, request, querysets):
         app_name = self.model._meta.app_label
+        verbose_name = self.model._meta.verbose_name
         table_name = self.model._meta.model_name
         selected_ids = ','.join([str(i.id) for i in querysets])
 
@@ -25,16 +26,19 @@ class BaseAdmin(object):
         else:
             errors = {}
 
-        if request.POST.get('delete_confirm') == "yes":
+        if request.POST.get('_delete_confirm') == "yes":
+
             if not self.readonly_table:
                 querysets.delete()
             return redirect('/swing/%s/%s/' % (app_name, table_name))
-        return render(request, 'swing/snowball_obj_delete.html', {
+        return render(request, 'swing/table_obj_delete.html', {
                     'objs': querysets,
                     'admin_class': self,
                     'app_name': app_name,
                     'table_name': table_name,
+                    'model_verbose_name': verbose_name,
                     'selected_ids': selected_ids,
+                    "admin_action": request._admin_action,
                     'errors': errors})
 
     def default_form_validation(self):

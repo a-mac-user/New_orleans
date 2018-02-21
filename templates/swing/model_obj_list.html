@@ -9,7 +9,7 @@
     <div id="breadcrumb">
         <a href="{% url 'swing' %}"><i class="icon-home"></i> 客户相关</a>
         <a href="{% url 'app_tables' app_name %}">{{ app_name|capfirst}}</a>
-        <a>{{ table_obj.model_verbose_name }}</a>
+        <a> {{ table_obj.model_verbose_name }}</a>
     </div>
 {% endblock %}
 

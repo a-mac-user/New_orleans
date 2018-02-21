@@ -174,7 +174,7 @@
     function DoTheAction(form_ele) {
         var post_args = {
             'selected_ids':[],
-            'model_name' : "{{ table_obj.model_db_table }}",
+            'model_name' : "{{ table_obj.model_name }}",
             'action': $("#admin_action").val()
         };
         $(".table-responsive input[tag='row-check']").each(function (index,ele) {
@@ -192,7 +192,7 @@
             alert("必须选中一个action进行操作");
             return false;
         }
-        var selected_ids_ele = "<input  name='selected_ids' type='hidden' value='" + post_args.selected_ids.toString() + "' >"
+        var selected_ids_ele = "<input name='selected_ids' type='hidden' value='" + post_args.selected_ids.toString() + "' >";
         $(form_ele).append(selected_ids_ele);
         //console.log($(ele).find("input[name='selected_ids']") ) //val(post_args.selected_ids.toString());
         return true;
