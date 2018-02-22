@@ -109,16 +109,20 @@
                                             <ul class="pagination">
                                                 {% if table_obj.query_sets.has_previous %}
                                                 <li class="disabled">
-                                                    <a href="{{ request.get_full_path }}?page={{ table_obj.query_sets.previous_page_number }}" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a>
+                                                    <a href="{{ request.path }}?page={{ table_obj.query_sets.previous_page_number }}" aria-label="Previous">
+                                                        <span aria-hidden="true">&laquo;</span>
+                                                    </a>
                                                 </li>
                                                 {% endif %}
+
                                                 {% for p_num in paginator.page_range %}
                                                     {% render_page_num request table_obj.query_sets p_num %}
                                                 {% endfor %}
-                                                {% if customer_list.has_next %}
+
+                                                {% if table_obj.query_sets.has_next %}
                                                 <li>
-                                                  <a href="{{ request.get_full_path }}?page={{ table_obj.query_sets.next_page_number }}" aria-label="Next">
-                                                    <span aria-hidden="true">&raquo;</span>
+                                                  <a href="{{ request.path }}?page={{ table_obj.query_sets.next_page_number }}" aria-label="Next">
+                                                      <span aria-hidden="true">&raquo;</span>
                                                   </a>
                                                 </li>
                                                 {% endif %}
