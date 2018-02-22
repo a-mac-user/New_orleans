@@ -1,30 +1,19 @@
 {% extends 'base.html' %}
+{% load static %}
 
-{% block title %}
-    学员报名
+{% block title %}学员报名{% endblock %}
+
+{% block breadcrumb %}
+    <div id="breadcrumb">
+        <a href="{% url 'swing' %}"><i class="icon-home"></i> 客户相关</a>
+        <a>学员报名</a>
+    </div>
 {% endblock %}
 
 {% block container %}
-
 <div class="panel">
         <div class="eq-height clearfix">
-            <div class="col-md-5 eq-box-md text-center box-vmiddle-wrap bg-primary">
-
-                <!-- Simple Promotion Widget -->
-                <!--===================================================-->
-                <div class="box-vmiddle pad-all">
-                    <h3 class="text-thin">学员报名</h3>
-                    <span class="icon-wrap icon-wrap-lg icon-circle bg-trans-light">
-                        <i class="fa fa-gift fa-5x text-primary"></i>
-                    </span>
-                    <p>2017元旦前报名，享 <span class="text-lg text-bold">50%</span> 优惠，今天就开启技术牛人之路！</p>
-                    <a class="btn btn-lg btn-primary btn-labeled fa fa-arrow-right" href="#">详细活动信息...</a>
-                </div>
-                <!--===================================================-->
-
-            </div>
             <div class="col-md-7 eq-box-md eq-no-panel">
-
                 <!-- Main Form Wizard -->
                 <!--===================================================-->
                 <div id="demo-main-wz">

@@ -49,11 +49,11 @@ class CustomerAdmin(BaseAdmin):
 
     def enroll(self):
         # 报名链接
-        print("customize field enroll", self)
+        # print("customize field enroll", self)
         link_name = "报名"
         if self.instance.status == "signed":
             link_name = "报名新课程"
-        return '''<a class="btn-link" href="/crm/enrollment/%s/">%s</a> ''' % (self.instance.id, link_name)
+        return '''<a class="btn-link" href="/sales/enrollment/%s/">%s</a> ''' % (self.instance.id, link_name)
     enroll.display_name = "报名链接"
 
 
