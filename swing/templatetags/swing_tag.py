@@ -117,10 +117,10 @@ def build_table_row(row_obj, table_obj, onclick_column=None, target_link=None):
             else:
                 column = "<td>%s</td>" % column_data
 
-        elif hasattr(table_obj.admin_class, column_name):  # customized field
+        elif hasattr(table_obj.admin_class, column_name):  # customized field,enroll
             field_func = getattr(table_obj.admin_class, column_name)
             table_obj.admin_class.instance = row_obj
-            column = "<td>%s</td>" % field_func
+            column = "<td align='right'>%s</td>" % field_func(table_obj.admin_class)
 
         row_ele += column
     # for dynamic display

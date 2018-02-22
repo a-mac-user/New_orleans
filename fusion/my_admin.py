@@ -48,7 +48,7 @@ class CustomerAdmin(BaseAdmin):
     }
 
     def enroll(self):
-        # 报名
+        # 报名链接
         print("customize field enroll", self)
         link_name = "报名"
         if self.instance.status == "signed":

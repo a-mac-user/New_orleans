@@ -73,7 +73,7 @@
                                 <th><input type="checkbox" class="checker" onclick="SelectAllRows()"></th>
                                 {% if table_obj.list_display %}
                                     {% for column in table_obj.list_display %}
-                                        <th class="column-sorted">
+                                        <th class="column-sorted" style="text-align: left">
                                             <a href="?page={{ table_obj.query_sets.number }}&orderby={% if table_obj.orderby_col_index == forloop.counter0 %}{{ table_obj.orderby_field}}{% else %}{{ column }}{% endif %}{% for k,v in request.GET.items %}{% if k != 'page' and  k != 'orderby' %}&{{ k }}={{ v }}{% endif %}{% endfor %}" >
                                                 {% get_table_column column table_obj %}
                                                 {% display_orderby_arrow table_obj forloop.counter0 %}
