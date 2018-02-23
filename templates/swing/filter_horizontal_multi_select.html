@@ -3,8 +3,8 @@
 <div>
     <div  style="width: 380px;float: left">
     {#                         {% get_attr field %}#}
-         <p>可选 {% add_new_obj_btn form_obj field %} </p>
-            <input autocomplete="off" id='_search_{{ field.name }}' oninput="FuzzySearch('{{ field.name }}')" type="text" class="form-control" placeholder="Search..">
+         <p>可选讲师 {% add_new_obj_btn form_obj field %} </p>
+            <input autocomplete="off" id='_search_{{ field.name }}' oninput="FuzzySearch('{{ field.name }}')" type="text" class="form-control" placeholder="搜索...">
 
          {% get_m2m_obj field.name form_obj as m2m_objs %}
          {% get_chosen_m2m_obj field form_obj.instance as chosen_m2m_objs %}
@@ -19,7 +19,7 @@
          </select>
          {% if field.name not in form_obj.Meta.admin.readonly_fields %}
          <p class="btn-link" onclick="ChoseAllOptions('available_{{ field.name }}','id_{{ field.name }}','{{ field.name }}')" align="center" style="cursor:pointer;font-weight:bold;margin-top:10px">
-             Choose all <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
+             全选 <i class="fa fa-chevron-circle-right" aria-hidden="true"></i>
          </p>
         {% endif %}
     </div>
@@ -30,7 +30,7 @@
 
  </div>
  <div  style="width: 380px;float: left;">
-     <p>已选 </p>
+     <p>已选讲师 </p>
 
      <select data-type="m2m_chosen" style="height: 230px" multiple class="form-control" id="id_{{ field.name }}" name="{{ field.name }}" {% check_disabled_attr field.name form_obj %} >
          {% for obj in chosen_m2m_objs %}
@@ -40,7 +40,7 @@
      </select>
     {% if field.name not in form_obj.Meta.admin.readonly_fields %}
      <p class="btn-link" onclick="ChoseAllOptions('id_{{ field.name }}','available_{{ field.name }}','{{ field.name }}')" align="center" style="cursor:pointer;font-weight:bold;margin-top:10px">
-         <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>Remove all
+         <i class="fa fa-chevron-circle-left" aria-hidden="true"></i>清空已选
      </p>
     {% endif %}
  </div>
@@ -65,7 +65,7 @@
         //console.log("to target_select_ele: "+target_select_ele_id);
         //console.log(ele);
         //console.log(ele.srcElement.type);
-        if (ele.srcElement.type != 'select-multiple'){ //为避免当select里无option时，再点击会把select自己删除 掉
+        if (ele.srcElement.type != 'select-multiple'){ //为避免当select里无option时，再点击会把select自己删除掉
 
             var clone_ele = $(ele)[0].srcElement;
             $(ele)[0].srcElement.remove();

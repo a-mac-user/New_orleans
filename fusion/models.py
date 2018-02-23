@@ -125,7 +125,7 @@ class ClassList(models.Model):
     branch = models.ForeignKey('Branch', verbose_name=u'校区')
 
     def __str__(self):
-        return '%s - %s - %s' % (self.branch, self.course, self.semester)
+        return '校区:%s - 课程:%s - 学期:%s' % (self.branch, self.course, self.semester)
 
     class Meta:
         unique_together = ('branch', 'course', 'semester')

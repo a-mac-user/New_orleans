@@ -14,6 +14,9 @@ class BaseAdmin(object):
     modelform_exclude_fields = []
     add_form = None
     onclick_fields = []
+    list_editable = []
+    choice_fields = []
+    fk_fields = []
 
     def delete_selected_objs(self, request, querysets):
         app_name = self.model._meta.app_label

@@ -68,6 +68,7 @@ class ClasslistAdmin(BaseAdmin):
     list_display = ('branch', 'course', 'semester', 'start_date')
     fk_fields = ('branch', 'course')
     filter_horizontal = ('teachers',)
+    list_filter = ('branch', 'course', 'semester')
     default_actions = ['delete_selected', ]
     readonly_fields = ['price', 'semester']
 
@@ -82,9 +83,9 @@ class PaymentRecordAdmin(BaseAdmin):
 
 class CourseRecordAdmin(BaseAdmin):
     model = models.CourseRecord
-    list_display = ('course', 'day_num', 'date', 'teacher', 'has_homework', 'homework_title', 'study_records')
-    fk_fields = ('course', 'teacher')
-    list_filter = ('course', 'teacher', 'has_homework', 'day_num')
+    list_display = ('from_class', 'day_num', 'date', 'teachers', 'has_homework', 'homework_title', 'study_records')
+    fk_fields = ('from_class', 'teachers')
+    list_filter = ('from_class', 'teachers', 'has_homework', 'day_num')
 
     def study_records(self):
         ele = '''<a class="btn-link" href='/kingadmin/crm_studyrecord/?&course_record=%s' >学员成绩</a>''' \
