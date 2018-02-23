@@ -29,7 +29,7 @@ def customers(request):
 
 @login_required
 def customer_change(request, customer_id):
-    """customer change page"""
+    # 客户信息修改
     template_data = swing_views.table_change(request, 'fusion', 'customer', customer_id, embed=True)
     if type(template_data) is dict:
         return render(request, 'sales/customer_change.html', template_data)

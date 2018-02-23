@@ -3,8 +3,7 @@ from django.conf.urls import url
 
 urlpatterns = [
     url(r'^$', views.sales_index, name='sales'),
-
-    # url(r'^$', views.sales_dashboard, name="crm_dashboard"),  # 销售角色首页
+    url(r'^change/(\d+)/$', views.customer_change, name="customer_change"),
     url(r'^customers/$', views.customers, name="customers"),
     url(r'^customers/change/(\d+)/$', views.customer_change, name="customer_change"),
     url(r'^my_customers/$', views.my_customers, name="my_customers"),

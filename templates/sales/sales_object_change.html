@@ -1,0 +1,64 @@
+{% load swing_tag %}
+{% load static %}
+
+{#<div class="panel">#}
+<div class="row-fluid">
+    <div class="span7">
+        <div class="widget-box">
+            <div class="widget-title">
+                <span class="icon">
+                    <i class="icon-align-justify"></i>
+                </span>
+                <h5 class="panel-title">修改 {{ model_verbose_name }}</h5>
+            </div>
+
+            <div class="widget-content nopadding">
+                <form method="post" onsubmit="return CheckSelectedOptions()" class=" form-horizontal form-padding">{% csrf_token %}
+                    {% if form_obj.errors%}
+                        <div class="alert alert-danger media fade in">
+                            <strong>表单错误!</strong> {% get_form_global_error form_obj.errors %}
+                        </div>
+                    {% endif %}
+                    {% for field in form_obj %}
+                        <div class="control-group">
+                            {%if field.field.required%}
+                                <label class="control-label">
+                                    <b>{{field.label}}</b>
+                                </label>
+                            {% else %}
+                                <label class="control-label">
+                                   {{field.label}}
+                                </label>
+                            {% endif %}
+
+                            <div class="controls">
+                                {% if field.name not in admin_class.filter_horizontal %}
+                                    {{ field }}
+                                    {% add_fk_search_btn form_obj field %}
+                                    {% add_new_obj_btn form_obj field %}
+                                        <span class="help-block">{{ field.help_text }}</span>
+                                    {% if field.errors %}
+                                        <span style="color: red">{{ field.errors }}</span>
+                                    {% endif %}
+                                {% else %}
+                                    {% include 'swing/filter_horizontal_multi_select.html' %}
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+
+                    <div class="form-actions">
+                        {% if not admin_class.readonly_table  %}
+                            <button class="btn btn-info pull-right" type="submit">保存</button>
+                        {% endif %}
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{#</div>#}
+
+{% block js %}
+<script src="{% static 'js/filter_horizontal.js' %}"></script>
+{% endblock %}
