@@ -68,9 +68,13 @@
 <!--sidebar-menu-->
 <div id="sidebar"><a href="#" class="visible-phone"><i class="icon icon-home"></i> Dashboard</a>
   <ul>
-    <li class="active"><a href="/swing"><i class="icon icon-home"></i> <span>客户相关</span></a> </li>
-    <li> <a href="widgets.html"><i class="icon icon-inbox"></i> <span>学生相关</span></a> </li>
-    <li class="submenu"> <a href="#"><i class="icon icon-info-sign"></i> <span>操作记录</span></a></li>
+    <li class="active"><a href="/swing"><i class="icon icon-home"></i>
+        <span>{% block sidebar1 %}客户相关{% endblock %}</span></a>
+    </li>
+    <li> <a href="widgets.html"><i class="icon icon-inbox"></i>
+        <span>{% block sidebar2 %}学生相关{% endblock %}</span></a> </li>
+    <li class="submenu"> <a href="#"><i class="icon icon-info-sign"></i>
+        <span>{% block sidebar3 %}操作记录{% endblock %}</span></a></li>
   </ul>
 </div>
 <!--sidebar-menu-->
