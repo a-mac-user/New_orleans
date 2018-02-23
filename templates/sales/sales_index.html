@@ -1,10 +1,40 @@
 {% extends 'base.html' %}
+{% load swing_tag %}
 
 {% block title %}
 销售首页
 {% endblock %}
 
-{% block sidebar1 %}销售概览{% endblock %}
-{% block sidebar2 %}客户库{% endblock %}
-{% block sidebar3 %}我的客户{% endblock %}
+{% block sidebar %}
+    <div id="sidebar"><a href="#" class="visible-phone"><i class="icon icon-home"></i> Dashboard</a>
+        <ul>
+            <li class="active"><a href="/sales"><i class="icon icon-home"></i>
+                <span> 销售概览</span></a>
+            </li>
+            <li><a href="{% url 'customers' %}"><i class="icon icon-inbox"></i>
+                <span> 客户库</span></a>
+            </li>
+            <li class="submenu"> <a href="#"><i class="icon icon-info-sign"></i>
+                <span> 我的客户</span></a>
+            </li>
+            <li class="submenu"> <a href="#"><i class="icon icon-bar-chart"></i>
+                <span> 销售报表</span></a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
 
+{% block breadcrumb %}
+    <div id="breadcrumb">
+        <a href="{% url 'sales' %}"><i class="icon-home"></i> 销售概览</a>
+        <a> {{ table_obj.model_verbose_name }}</a>
+    </div>
+{% endblock %}
+
+{% block container %}
+    {% include "swing/object_list_table.html" %}
+{% endblock %}
+
+{% block js %}
+    {% include "swing/object_list_table_editable_js.html" %}
+{% endblock %}

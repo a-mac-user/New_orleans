@@ -7,25 +7,23 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, HttpResponseRedirect, Http404
 
 
-# from PerfectCRM import settings
-
-
 @login_required()
 def sales_index(request):
     # 销售主页
-    return render(request, 'sales/sales_index.html')
+    template_data = swing_views.display_table_list(request, 'fusion', 'customer', embed=True)
+    if type(template_data) is dict:
+        return render(request, 'sales/sales_index.html', template_data)
+    else:  # 调用的视图可能出错了，返回了一个错误页面，这里不做处理，也直接返回
+        return template_data
 
 
 @login_required
 def customers(request):
-    # sales role home page
-    print(request.GET)
-
-    # return kingadmin_views.display_table_list(request,'crm','customer')
-    template_data = swing_views.display_table_list(request, 'crm', 'customer', embed=True)
+    # 客户库
+    template_data = swing_views.display_table_list(request, 'fusion', 'customer', embed=True)
     if type(template_data) is dict:
         # print("template data",template_data,type(template_data))
-        return render(request, 'crm/customers.html',template_data)
+        return render(request, 'sales/sales_index.html', template_data)
     else:  # 调用的视图可能出错了，返回了一个错误页面，这里不做处理，也直接返回
         return template_data
 
@@ -35,7 +33,7 @@ def customer_change(request, customer_id):
     """customer change page"""
     template_data = swing_views.table_change(request, 'crm', 'customer', customer_id, embed=True)
     if type(template_data) is dict:
-        return render(request, 'crm/customer_change.html', template_data)
+        return render(request, 'sales/customer_change.html', template_data)
     else:
         return template_data
 
