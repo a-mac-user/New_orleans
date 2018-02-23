@@ -22,16 +22,15 @@ def customers(request):
     # 客户库
     template_data = swing_views.display_table_list(request, 'fusion', 'customer', embed=True)
     if type(template_data) is dict:
-        # print("template data",template_data,type(template_data))
-        return render(request, 'sales/sales_index.html', template_data)
-    else:  # 调用的视图可能出错了，返回了一个错误页面，这里不做处理，也直接返回
+        return render(request, 'sales/all_customers.html', template_data)
+    else:
         return template_data
 
 
 @login_required
 def customer_change(request, customer_id):
     """customer change page"""
-    template_data = swing_views.table_change(request, 'crm', 'customer', customer_id, embed=True)
+    template_data = swing_views.table_change(request, 'fusion', 'customer', customer_id, embed=True)
     if type(template_data) is dict:
         return render(request, 'sales/customer_change.html', template_data)
     else:
@@ -41,13 +40,21 @@ def customer_change(request, customer_id):
 @login_required
 def my_customers(request):
     # 每个销售自己的客户列表
-    return render(request, "crm/my_customer.html")
+    template_data = swing_views.display_table_list(request, 'fusion', 'customer', embed=True)
+    if type(template_data) is dict:
+        return render(request, 'sales/my_customer.html', template_data)
+    else:
+        return template_data
 
 
 @login_required
 def sales_report(request):
     # 销售报表
-    return render(request, "crm/sales_report.html")
+    template_data = swing_views.display_table_list(request, 'fusion', 'customer', embed=True)
+    if type(template_data) is dict:
+        return render(request, 'sales/sales_report.html', template_data)
+    else:
+        return template_data
 
 
 @login_required

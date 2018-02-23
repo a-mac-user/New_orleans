@@ -8,7 +8,7 @@
 {% block sidebar %}
     <div id="sidebar"><a href="#" class="visible-phone"><i class="icon icon-home"></i> Dashboard</a>
         <ul>
-            <li class="active"><a href="{% url 'sales' %}"><i class="icon icon-home"></i>
+            <li><a href="{% url 'sales' %}"><i class="icon icon-home"></i>
                 <span> 销售概览</span></a>
             </li>
             <li><a href="{% url 'customers' %}"><i class="icon icon-inbox"></i>
@@ -17,7 +17,7 @@
             <li class="submenu"><a href="{% url 'my_customers' %}"><i class="icon icon-info-sign"></i>
                 <span> 我的客户</span></a>
             </li>
-            <li class="submenu"> <a href="{% url 'sales_report' %}"><i class="icon icon-bar-chart"></i>
+            <li class="active"> <a href="{% url 'sales_report' %}"><i class="icon icon-bar-chart"></i>
                 <span> 销售报表</span></a>
             </li>
         </ul>
@@ -27,7 +27,7 @@
 {% block breadcrumb %}
     <div id="breadcrumb">
         <a href="{% url 'sales' %}"><i class="icon-home"></i> 销售概览</a>
-        <a> {{ table_obj.model_verbose_name }}</a>
+        <a> 销售报表</a>
     </div>
 {% endblock %}
 
