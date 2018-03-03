@@ -26,7 +26,7 @@
 
 ####项目入口
 
-![image](https://github.com/a-mac-user/New_orleans/master/share/screeshots/1.jpg)
+![image](https://github.com/a-mac-user/New_orleans/blob/master/share/screeshots/1.JPG)
 
 
 
