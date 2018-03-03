@@ -24,7 +24,6 @@
 
 ##以下为一些项目截图
 
-####项目入口
 
 ![image](https://github.com/a-mac-user/New_orleans/blob/master/share/screeshots/1.JPG)
 
