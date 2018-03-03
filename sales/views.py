@@ -38,6 +38,16 @@ def customer_change(request, customer_id):
 
 
 @login_required
+def customer_add(request):
+    # 客户信息修改
+    template_data = swing_views.table_add(request, 'fusion', 'customer', embed=True)
+    if type(template_data) is dict:
+        return render(request, 'sales/customer_add.html', template_data)
+    else:
+        return template_data
+
+
+@login_required
 def my_customers(request):
     # 每个销售自己的客户列表
     template_data = swing_views.display_table_list(request, 'fusion', 'customer', embed=True)

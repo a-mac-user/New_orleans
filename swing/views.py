@@ -215,7 +215,7 @@ def table_del(request, app_name, table_name, obj_id):
 
 
 @login_required(login_url="/swing/login")
-def table_add(request, app_name, table_name):
+def table_add(request, app_name, table_name, embed=False):
     # print("request :",request.POST)
     if app_name in site.enabled_admins:
         if table_name in site.enabled_admins[app_name]:
@@ -259,16 +259,20 @@ def table_add(request, app_name, table_name):
                                 return redirect(redirect_url)
                             else:
                                 print("pop up add windows....")
-            return render(request,
-                          'swing/table_add.html',
-                          {'form_obj': form_obj,
+            return_data = {'form_obj': form_obj,
                            'model_name': admin_class.model._meta.model_name,
                            'model_verbose_name': admin_class.model._meta.verbose_name,
                            'model_db_table': admin_class.model._meta.db_table,
                            'admin_class': admin_class,
                            'app_name': app_name,
                            'enabled_admins': site.enabled_admins
-                           })
+                           }
+            if embed:
+                return return_data
+            else:
+                return render(request,
+                              'swing/table_add.html',
+                              return_data)
 
     else:
         raise Http404("url %s/%s not found" % (app_name, table_name))

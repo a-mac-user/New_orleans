@@ -1,0 +1,102 @@
+{% extends 'base.html' %}
+{% load swing_tag %}
+{% load static %}
+
+{% block title %}
+{{ model_verbose_name }}
+{% endblock %}
+
+{% block sidebar %}
+    <div id="sidebar"><a href="#" class="visible-phone"><i class="icon icon-home"></i> Dashboard</a>
+        <ul>
+            <li><a href="{% url 'sales' %}"><i class="icon icon-home"></i>
+                <span> 销售概览</span></a>
+            </li>
+            <li class="active"><a href="{% url 'customers' %}"><i class="icon icon-inbox"></i>
+                <span> 客户库</span></a>
+            </li>
+            <li class="submenu"><a href="{% url 'my_customers' %}"><i class="icon icon-info-sign"></i>
+                <span> 我的客户</span></a>
+            </li>
+            <li class="submenu"> <a href="{% url 'sales_report' %}"><i class="icon icon-bar-chart"></i>
+                <span> 销售报表</span></a>
+            </li>
+        </ul>
+    </div>
+{% endblock %}
+
+{% block breadcrumb %}
+    <div id="breadcrumb">
+        <a href="{% url 'sales' %}"><i class="icon-home"></i> 销售概览</a>
+        <a href="{% url 'customers' %}"> {{ model_verbose_name }}库</a>
+        <a> 增加 {{ model_verbose_name }}</a>
+    </div>
+{% endblock %}
+
+{% block container %}
+{#    {% include 'swing/filter_search_box.html' %}#}
+    {% check_pop_up_window request form_obj %}
+<div class="row-fluid">
+    <div class="span7">
+        <div class="widget-box">
+            <div class="widget-title">
+                <span class="icon">
+                    <i class="icon-align-justify"></i>
+                </span>
+                <h5 class="panel-title">增加 {{ model_verbose_name }}</h5>
+            </div>
+
+            <div class="widget-content nopadding">
+                <form method="post" onsubmit="return CheckSelectedOptions()" class=" form-horizontal">{% csrf_token %}
+                    {% if form_obj.errors%}
+                    <div class="alert alert-danger media fade in">
+                    <strong>表单错误</strong> {% get_form_global_error form_obj.errors %}
+                    </div>
+{#                {% printf form_obj.errors %}#}
+                    {% endif %}
+                    {% for field in form_obj %}
+                        <div class=control-group>
+                    {%if field.field.required%}
+                        <label class="control-label">
+                            <b>{{field.label}}</b>
+                        </label>
+                    {% else %}
+                        <label class="control-label">
+                           {{field.label}}
+                        </label>
+                    {% endif %}
+                    <div class="controls">
+                        {% if field.name not in admin_class.filter_horizontal %}
+                            {{ field }}
+                            {% add_fk_search_btn form_obj field %}
+                            {% add_new_obj_btn form_obj field %}
+
+                            {% if field.errors %}
+                                <span style="color: red">{{ field.errors }}</span>
+                            {% endif %}
+                        {% else %}
+                            {% include 'swing/filter_horizontal_multi_select.html' %}
+                            {% if field.errors %}
+                                <span style="color: red">{{ field.errors }}</span>
+                            {% endif %}
+                        {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
+                <!--end panel-body-->
+                    <div class="form-actions">
+                        <button class="btn btn-info" type="submit">保存</button>
+                        <button class="btn btn-success pull-right" name="_continue" type="submit">保存并继续修改</button>
+                        <button type="submit" class="btn btn-info pull-right" style="margin-right: 5px" name="_add_another">保存并增加另一个</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block js %}
+    <script src="{% static 'js/filter_horizontal.js' %}"></script>
+{% endblock %}
